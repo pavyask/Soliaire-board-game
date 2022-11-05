@@ -11,4 +11,7 @@
             <Setter Property="Background" Value="BLue"/>
         </Style>
     </UserControl.Resources>
+
+    <Button Content="" Style="{StaticResource GameButtonStyle}" Command="{Binding MoveAttemptCommand}"/>
+    
 </UserControl>

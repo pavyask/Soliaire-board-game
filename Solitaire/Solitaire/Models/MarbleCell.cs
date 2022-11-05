@@ -6,15 +6,19 @@ using System.Threading.Tasks;
 
 namespace Solitaire.Models
 {
-   public class Marble
+    public class MarbleCell
     {
-        public Position Position { get; set; }
+        public Position Position { get; }
         public bool IsSelected { get; set; }
 
-        public Marble(int x, int y)
+        public bool IsEmpty { get; set; }
+
+        public MarbleCell(int x, int y, bool isEmpty)
         {
             Position = new Position(x, y);
+            IsEmpty = isEmpty;
             IsSelected = false;
+
         }
     }
 }

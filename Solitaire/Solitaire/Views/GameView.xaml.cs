@@ -1,18 +1,6 @@
 ﻿using Solitaire.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+using Solitaire.ViewModels;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Solitaire.Views
 {
@@ -23,12 +11,11 @@ namespace Solitaire.Views
     {
         private const int BoardWidth = 7;
         private const int BoardHeight = 7;
-        //private GameButtonView[,] _gameButtons = new GameButtonView[BoardWidth, BoardHeight];
-        private Game _game;
+        public GameViewModel GameViewModel => (GameViewModel)DataContext;
 
         public GameView()
         {
-            _game = new Game(new Board1());
+            DataContext = new GameViewModel(new Game(new Board1()));
             InitializeComponent();
             InitializeBoard();
         }
@@ -52,11 +39,12 @@ namespace Solitaire.Views
                         )
                         continue;
 
-                    GameButtonView button = new GameButtonView(new Position(x, y));
+                    var pos = new Position(x, y);
+                    var gameButtonViewModel = GameViewModel.GetGameButtonViewModelOnPos(pos);
+                    GameButtonView button = new GameButtonView(gameButtonViewModel);
                     Grid.SetColumn(button, x);
                     Grid.SetRow(button, y);
                     BoardGrid.Children.Add(button);
-                    //_gameButtons[x, y] = button;
                 }
             }
         }

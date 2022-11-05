@@ -1,4 +1,5 @@
 ﻿using Solitaire.Models;
+using Solitaire.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,17 +21,11 @@ namespace Solitaire.Views
     /// Interaction logic for GameButtonView.xaml
     /// </summary>
     public partial class GameButtonView : UserControl
-    {
-        public GameButtonView(Position pos)
+    {   
+        public GameButtonView(GameButtonViewModel dataContext)
         {
+            DataContext = dataContext;
             InitializeComponent();
-            Button button = new Button()
-            {
-                Content = pos.ToString(),
-                Style = FindResource("GameButtonStyle") as Style,
-            };
-
-            AddChild(button);
         }
     }
 }

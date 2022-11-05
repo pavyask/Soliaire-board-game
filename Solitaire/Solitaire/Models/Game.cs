@@ -13,7 +13,7 @@ namespace Solitaire.Models
 
         public List<Move> Moves { get; private set; } = new List<Move>();
 
-        public Marble? CurrentMarble { get; private set; }
+        public MarbleCell? CurrentMarble { get; private set; }
 
         public Game(Board1 board1)
         {
@@ -23,24 +23,23 @@ namespace Solitaire.Models
         public void MoveAttempt(Position pos)
         {
             MessageBox.Show(pos.ToString());
-            var x = pos.X;
-            var y = pos.Y;
+            var marbleCell = GetMarbleCellOnPos(pos);
 
-            if (IsCellEmpty(x, y) && CurrentMarble == null)
+            if (marbleCell.IsEmpty && CurrentMarble == null)
                 return;
 
-            else if (!IsCellEmpty(x, y))
+            else if (!marbleCell.IsEmpty)
             {
                 DeselectCurrentMarble();
-                CurrentMarble = GetMarbleOnPos(x, y);
+                CurrentMarble = marbleCell;
                 CurrentMarble.IsSelected = true;
             }
 
-            else if (IsCellEmpty(x, y) && CurrentMarble != null)
+            else if (marbleCell.IsEmpty && CurrentMarble != null)
             {
-                if (IsMoveValid(CurrentMarble, x, y))
+                if (IsMoveValid(CurrentMarble, marbleCell))
                 {
-                    MoveMarble(x, y);
+                    MoveMarble(marbleCell);
                     DeselectCurrentMarble();
                 }
             }
@@ -52,17 +51,20 @@ namespace Solitaire.Models
                 MessageBox.Show("You LOST!", "Lose Message");
         }
 
-        public bool CheckWin() => Board.PegCounter == 1;
+        public bool CheckWin() => Board.MarbleCounter == 1;
 
         public bool CheckLose()
         {
             return false;
         }
 
-        public bool IsMoveValid(Marble marble, int destX, int destY)
+        public bool IsMoveValid(MarbleCell marble, MarbleCell destCell)
         {
             if (marble == null)
                 return false;
+
+            var destX = destCell.Position.X;
+            var destY = destCell.Position.Y;
 
             var midX = (marble.Position.X + destX) / 2;
             var midY = (marble.Position.X + destY) / 2;
@@ -79,21 +81,22 @@ namespace Solitaire.Models
             else return false;
         }
 
-        public void MoveMarble(int destX, int destY)
+        public void MoveMarble(MarbleCell destCell)
         {
             if (CurrentMarble == null)
                 return;
 
+            var destX = destCell.Position.X;
+            var destY = destCell.Position.Y;
             var midX = (CurrentMarble.Position.X + destX) / 2;
             var midY = (CurrentMarble.Position.Y + destY) / 2;
 
-            var fromPosition = new Position(CurrentMarble.Position);
-            var toPosition = new Position(destX, destY);
             var removedMarble = RemoveMarbleOnPos(midX, midY);
-            Moves.Add(new Move(fromPosition, toPosition, removedMarble));
+            removedMarble.IsEmpty = true;
+            Moves.Add(new Move(CurrentMarble, destCell, removedMarble));
 
-            CurrentMarble.Position.X = destX;
-            CurrentMarble.Position.Y = destY;
+            CurrentMarble.IsEmpty = true;
+            destCell.IsEmpty = false;
             DeselectCurrentMarble();
         }
 
@@ -104,35 +107,34 @@ namespace Solitaire.Models
                 return;
 
             var lastMove = Moves.Last();
-            var marble = GetMarbleOnPos(lastMove.ToPosition);
-            var removedMarble = lastMove.RemovedMarble;
-
-            marble.Position.X = lastMove.FromPosition.X;
-            marble.Position.Y = lastMove.FromPosition.Y;
-            Board.Marbles.Add(removedMarble);
+            lastMove.ToCell.IsEmpty = true;
+            lastMove.RemovedMarble.IsEmpty = false;
+            lastMove.FromCell.IsEmpty = false;
+            Board.MarbleCounter++;
             Moves.Remove(lastMove);
             DeselectCurrentMarble();
         }
 
-        public Marble? GetMarbleOnPos(int x, int y) =>
-            Board.Marbles.Find(marble => marble.Position.X == x && marble.Position.Y == y);
+        public MarbleCell? GetMarbleCellOnPos(int x, int y) =>
+            Board.MarbleCells.Find(cell => cell.Position.X == x && cell.Position.Y == y);
 
-        public Marble? GetMarbleOnPos(Position position) => Board.Marbles.Find(marble =>
-            marble.Position.X == position.X && marble.Position.Y == position.Y);
+        public MarbleCell? GetMarbleCellOnPos(Position position) => Board.MarbleCells.Find(cell =>
+            cell.Position.X == position.X && cell.Position.Y == position.Y);
 
-        public Marble? RemoveMarbleOnPos(int x, int y)
+        public MarbleCell? RemoveMarbleOnPos(int x, int y)
         {
-            var marble = GetMarbleOnPos(x, y);
-            if (marble == null)
+            var marbelCell = GetMarbleCellOnPos(x, y);
+            if (marbelCell == null || marbelCell.IsEmpty)
                 return null;
             else
             {
-                Board.Marbles.Remove(marble);
-                return marble;
+                marbelCell.IsEmpty = false;
+                Board.MarbleCounter--;
+                return marbelCell;
             }
         }
 
-        public bool IsCellEmpty(int x, int y) => GetMarbleOnPos(x, y) == null;
+        public bool IsCellEmpty(int x, int y) => GetMarbleCellOnPos(x, y).IsEmpty;
 
         public void DeselectCurrentMarble()
         {
@@ -148,7 +150,7 @@ namespace Solitaire.Models
             MessageBox.Show("Restart");
             DeselectCurrentMarble();
             Moves.Clear();
-            Board.InitialState();
+            Board.ToInitialState();
         }
     }
 }

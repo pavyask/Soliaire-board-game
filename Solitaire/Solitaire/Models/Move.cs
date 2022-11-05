@@ -8,17 +8,17 @@ namespace Solitaire.Models
 {
     public class Move
     {
-        public Position FromPosition { get; }
+        public MarbleCell FromCell { get; }
 
-        public Position ToPosition { get; }
+        public MarbleCell ToCell { get; }
 
-        public Marble RemovedMarble { get; }
+        public MarbleCell RemovedMarble { get; }
 
-        public Move(Position fromPosition, Position toPosition, Marble removedPosition)
+        public Move(MarbleCell fromCell, MarbleCell toCell, MarbleCell removedMarble)
         {
-            FromPosition = fromPosition;
-            ToPosition = toPosition;
-            RemovedMarble = removedPosition;
+            FromCell = fromCell;
+            ToCell = toCell;
+            RemovedMarble = removedMarble;
         }
     }
 }

@@ -11,33 +11,36 @@ namespace Solitaire.Models
         private const int BoardWidth = 7;
 
         private const int BoardHeight = 7;
-        public List<Marble> Marbles { get; private set; } = new List<Marble>();
-        public int PegCounter { get; private set; } = 32;
+        public List<MarbleCell> MarbleCells { get; private set; } = new List<MarbleCell>();
+        public int MarbleCounter { get;set; } = 32;
 
         public Board1()
         {
-            InitialState();
+            ToInitialState();
         }
 
-        public void InitialState()
+        public void ToInitialState()
         {
-            Marbles.Clear();
+            MarbleCells.Clear();
 
-            for (int i = 0; i < BoardWidth; i++)
+            for (int x = 0; x < BoardWidth; x++)
             {
-                for (int j = 0; j < BoardHeight; j++)
+                for (int y = 0; y < BoardHeight; y++)
                 {
-                    if ((i < 2 && j < 2) ||
-                        (i < 2 && j > 4) ||
-                        (i > 4 && j < 2) ||
-                        (i > 4 && j > 4) ||
-                        (i == 3 && j == 3)) continue;
+                    if ((x < 2 && y < 2) ||
+                        (x < 2 && y > 4) ||
+                        (x > 4 && y < 2) ||
+                        (x > 4 && y > 4) ||
+                        (x == 3 && y == 3))
+                    {
+                        MarbleCells.Add(new MarbleCell(x, y, true));
+                    }
 
-                    Marbles.Add(new Marble(i, j));
+                    MarbleCells.Add(new MarbleCell(x, y, false));
                 }
             }
 
-            PegCounter = 32;
+            MarbleCounter = 32;
         }
     }
 }
