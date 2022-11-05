@@ -25,7 +25,7 @@ namespace Solitaire.Models
 
         public override string ToString()
         {
-            return $"Position: X={X}, Y={Y}";
+            return $"X={X},Y={Y}";
         }
     }
 }
