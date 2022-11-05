@@ -18,7 +18,7 @@ namespace Solitaire.Views
             DataContext = new GameViewModel(new Game(new Board1()));
             InitializeComponent();
             InitializeBoard();
-        }
+        } 
 
         private void InitializeBoard()
         {

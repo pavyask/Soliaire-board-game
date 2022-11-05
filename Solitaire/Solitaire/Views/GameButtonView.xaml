@@ -9,9 +9,19 @@
     <UserControl.Resources>
         <Style x:Key="GameButtonStyle" TargetType="Button">
             <Setter Property="Background" Value="BLue"/>
+
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Path=IsSelected}" Value="True">
+                    <Setter Property="Background" Value="Green" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Path=IsEmpty}" Value="True">
+                    <Setter Property="Background" Value="Gray" />
+                </DataTrigger>
+            </Style.Triggers>
+
         </Style>
     </UserControl.Resources>
 
-    <Button Content="" Style="{StaticResource GameButtonStyle}" Command="{Binding MoveAttemptCommand}"/>
+    <Button Content="{Binding Test}" Style="{StaticResource GameButtonStyle}" Command="{Binding MoveAttemptCommand}"/>
     
 </UserControl>

@@ -19,16 +19,16 @@ namespace Solitaire.ViewModels
 
         public bool CheckLose => _game.CheckLose();
 
-        public ObservableCollection<GameButtonViewModel> _gameButtons { get; } = new ObservableCollection<GameButtonViewModel>();
+        private ObservableCollection<GameButtonViewModel> _gameButtons = new ObservableCollection<GameButtonViewModel>();
 
         public GameViewModel(Game game)
         {
             _game = game;
-
             foreach (var cell in _game.Board.MarbleCells)
             {
-                _gameButtons.Add(new GameButtonViewModel(cell));
+                _gameButtons.Add(new GameButtonViewModel(cell, _game));
             }
+
         }
 
         public GameButtonViewModel GetGameButtonViewModelOnPos(Position pos)
@@ -39,13 +39,13 @@ namespace Solitaire.ViewModels
         [RelayCommand]
         private void Restart()
         {
-            MessageBox.Show("Restart");
+            _game.Restart();
         }
 
         [RelayCommand]
         private void GoBack()
         {
-            MessageBox.Show("Go Back");
+            _game.MoveBack();
         }
     }
 }
