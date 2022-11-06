@@ -30,8 +30,8 @@ namespace Solitaire.ViewModels
             }
 
         }
-
-        public GameButtonViewModel GetGameButtonViewModelOnPos(Position pos)
+        
+        public GameButtonViewModel? GetGameButtonViewModelOnPos(Position pos)
         {
             return _gameButtons.FirstOrDefault(x => x.Position.X == pos.X && x.Position.Y == pos.Y);
         }
