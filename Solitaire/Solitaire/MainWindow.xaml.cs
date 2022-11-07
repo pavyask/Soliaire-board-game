@@ -51,11 +51,13 @@ namespace Solitaire
                         continue;
                     else
                     {
+                        Style style = new Style(typeof(Border));
+                        style.Setters.Add(new Setter(Border.CornerRadiusProperty, new CornerRadius(100)));
                         var marbleCell = new MarbleCell(x, y, false);
+                        marbleCell.Resources.Add(typeof(Border), style);
                         if (x == 3 && y == 3)
                             marbleCell.IsEmpty = true;
 
-                        //marbleCell.Content = $"X={x},Y={y},isEmpty={marbleCell.IsEmpty}";
                         marbleCell.Click += MoveAttempt;
                         Grid.SetColumn(marbleCell, x);
                         Grid.SetRow(marbleCell, y);

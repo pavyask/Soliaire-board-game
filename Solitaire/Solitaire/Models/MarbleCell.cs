@@ -42,5 +42,6 @@ namespace Solitaire.Models
             IsSelected = false;
 
         }
+
     }
 }
